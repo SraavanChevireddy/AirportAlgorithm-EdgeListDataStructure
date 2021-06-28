@@ -47,42 +47,7 @@ class Graph:
        return self.get_vertex(withName).edges
 
 
-
-####################################
-# import dictionary for graph
-from collections import defaultdict
-
-    
-def addEdge(graph, u, v):
-    graph[u].append(v)
-    
-
-# definition of function
-def generate_edges(graph):
-    edges = []
-
-    # for each node in graph
-    for node in graph:
-
-        # for each neighbour node of a single node
-        for neighbour in graph[node]:
-            # if edge exists then append
-            edges.append((node, neighbour))
-    print("Edges :",edges)
-    return edges
-
-
-def find_path(graph, end, start, path=[]):
-    path = path + [start]
-    if start == end:
-        return path
-    for node in graph[start]:
-        if node not in path:
-            newpath = find_path(graph, node, end, path)
-            if newpath:
-                return newpath
-
-def find_graph_path(end, start, path=[]):
+def find_graph_path(start, end, path=[]):
     path = path + [start]
     if start == end:
         return path
@@ -93,20 +58,12 @@ def find_graph_path(end, start, path=[]):
                 return newpath
 
 
-def missing_path( start, airports,missing=[]):
+def missing_path( graph,start, airports,missing=[]):
     source = start
     keys_of_graph = maaf.get_all_vertices()
-    print(f'Keys are {keys_of_graph}')
 
     for m in maaf.get_all_vertices():
-        # f=find_path(graph, source, m)
         fo = find_graph_path(source,m)
-        print(source,m)
-        # print(f' I found {f}')
-        print(f' I foo found {fo}')
-
-        # if not f:
-        #     missing.append([source, m])
         if not fo:
             missing.append([source, m])
     return missing
@@ -137,7 +94,6 @@ def read_input(fl, airports):
                 source_airport = list(filter(lambda vertex: vertex.name == sc, maaf.vertices))[0]
                 destination_airport = list(filter(lambda vertex: vertex.name == dt, maaf.vertices))[0]
                 maaf.add_edges(source_airport,destination_airport)
-                # print(graph)
 
             if source_route:
                 starts_at.append(source_route.group(2))
@@ -148,7 +104,6 @@ def read_input(fl, airports):
 ## Main program
 
 # Global variables
-# graph = defaultdict(list)
 maaf = Graph()
 airports = []
 starts_at=[]
@@ -159,30 +114,18 @@ missing=[]
 
 input_file="inputsPS12.txt"
 read_input(input_file, airports)
-# print(generate_edges(graph))
-
-# graph_json=json.dumps(graph, indent=4)
-# print(f'This is graph {graph_json}')
-# print(f'Graphs are {graph}')
 
 start=maaf.get_starting_airport(starts_at[0]).name
-print("Starting Airport ",start)
-missing_path(start,maaf.get_all_vertices(),missing)
+missing_path(graph, start,maaf.get_all_vertices(),missing)
 
 c=0
-
 if missing:
     f = open("outputPS12.txt", "w+")
-
-    print(f'The minimum flights that need to be added = {len(missing)}')
-    print("The flights that need to be added are:")
-
     f.write(f'The minimum flights that need to be added = {len(missing)}\n')
     f.write("The flights that need to be added are:\n")
 
     for m in missing:
         c+=1
-        print(",".join(m))
         f.write(",".join(m))
         f.write("\n")
     f.close()
