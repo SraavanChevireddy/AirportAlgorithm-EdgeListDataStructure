@@ -1,0 +1,16 @@
+The minimum flights that need to be added = 14
+The flights that need to be added are:
+DSM,BGI
+DSM,CDG
+DSM,DEL
+DSM,DOH
+DSM,EYW
+DSM,ICN
+DSM,JFK
+DSM,LGA
+DSM,LHR
+DSM,ORD
+DSM,SAN
+DSM,SIN
+DSM,TLV
+DSM,BUD
