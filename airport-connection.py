@@ -51,18 +51,18 @@ def find_graph_path(start, end, path=[]):
     path = path + [start]
     if start == end:
         return path
-    for each_edge in maaf.get_edges(start):
+    for each_edge in graph.get_edges(start):
         if each_edge.destinationVertex.name not in path:
             newpath = find_graph_path(each_edge.destinationVertex.name, end, path)
             if newpath:
                 return newpath
 
 
-def missing_path( graph,start, airports,missing=[]):
+def missing_path(start, airports,missing=[]):
     source = start
-    keys_of_graph = maaf.get_all_vertices()
+    keys_of_graph = graph.get_all_vertices()
 
-    for m in maaf.get_all_vertices():
+    for m in graph.get_all_vertices():
         fo = find_graph_path(source,m)
         if not fo:
             missing.append([source, m])
@@ -84,27 +84,27 @@ def read_input(fl, airports):
 
             if airport_match:
                 airports.extend([x.strip().lstrip(" ").rstrip(" ") for x in (airport_match.group(2)).strip().split(",") if x])
-                for x in airports: maaf.add_vertex(Vertex(x))
+                for x in airports: graph.add_vertex(Vertex(x))
 
             if add_route:
                 if not read_val:
                     add_route = False
                     continue 
                 sc,dt = [x.strip().lstrip(" ").rstrip(" ") for x in read_val.strip().split(",") if x]
-                source_airport = list(filter(lambda vertex: vertex.name == sc, maaf.vertices))[0]
-                destination_airport = list(filter(lambda vertex: vertex.name == dt, maaf.vertices))[0]
-                maaf.add_edges(source_airport,destination_airport)
+                source_airport = list(filter(lambda vertex: vertex.name == sc, graph.vertices))[0]
+                destination_airport = list(filter(lambda vertex: vertex.name == dt, graph.vertices))[0]
+                graph.add_edges(source_airport,destination_airport)
 
             if source_route:
                 starts_at.append(source_route.group(2))
-                maaf.get_starting_airport(starts_at[0])
+                graph.get_starting_airport(starts_at[0])
             # close(fl)    
 
 
 ## Main program
 
 # Global variables
-maaf = Graph()
+graph = Graph()
 airports = []
 starts_at=[]
 missing=[]
@@ -115,12 +115,12 @@ missing=[]
 input_file="inputsPS12.txt"
 read_input(input_file, airports)
 
-start=maaf.get_starting_airport(starts_at[0]).name
-missing_path(graph, start,maaf.get_all_vertices(),missing)
+start=graph.get_starting_airport(starts_at[0]).name
+missing_path(start,graph.get_all_vertices(),missing)
 
 c=0
 if missing:
-    f = open("outputPS12.txt", "w+")
+    f = open("OutputPS12.txt", "w+")
     f.write(f'The minimum flights that need to be added = {len(missing)}\n')
     f.write("The flights that need to be added are:\n")
 
